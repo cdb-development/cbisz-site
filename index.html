@@ -1349,14 +1349,14 @@ function toggleSpotify(){
 let wasLive = false;
 async function checkTwitchStatus(){
   try {
-    const res = await fetch(`/api/twitch-status?user=${TWITCH_USER}`, {signal:AbortSignal.timeout(5000)});
-    if(!res.ok) throw new Error('no proxy');
-    const data = await res.json();
-    const isLive = data.live;
-    if(isLive && !wasLive) showToast('live','🔴','CBisz is LIVE!', data.game ? `Now playing ${data.game}` : 'Stream just started!', 8000);
+    const res = await fetch(`https://decapi.me/twitch/uptime/${TWITCH_USER}`, {signal:AbortSignal.timeout(8000)});
+    const text = await res.text();
+    const isLive = !text.includes('offline') && !text.includes('error');
+
+    if(isLive && !wasLive) showToast('live','🔴','CBisz is LIVE!', 'Stream just started!', 8000);
     wasLive = isLive;
-    applyLiveStatus(isLive, data.title, data.game, data.viewers);
-    updateNowPlayingBadge(isLive, data.game);
+    applyLiveStatus(isLive);
+    updateNowPlayingBadge(isLive, null);
   } catch { applyLiveStatus(false); }
 }
 
@@ -1391,7 +1391,7 @@ function applyLiveStatus(isLive, title='', game='', viewers=0){
   }
 }
 checkTwitchStatus();
-setInterval(checkTwitchStatus, 120000);
+setInterval(checkTwitchStatus, 200000);
 
 /* ══════════════════════════════════════════════════════════════
    COUNTDOWN TIMER
