@@ -1132,28 +1132,30 @@ function dismissToast(el){
 
   function makeCannonParticle(side){
     const isLeft = side === 'left';
-    const baseAngle = isLeft ? (-Math.PI * 0.72) : (-Math.PI * 0.28);
-    const spread = Math.PI * 0.45;
+    const baseAngle = isLeft
+      ? (-Math.PI * 0.75)
+      : (-Math.PI * 0.25);
+    const spread = Math.PI * 0.55;
     const angle = baseAngle + (Math.random() - 0.5) * spread;
-    const speed = 45 + Math.random() * 35;
+    const speed = 12 + Math.random() * 18;
     const shapes = ['circle','rect','triangle','ribbon'];
     return {
-      x:  isLeft ? W * 0.02 : W * 0.98,
+      x:  isLeft ? W * 0.05 : W * 0.95,
       y:  H + 10,
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
-      gravity:  0.3 + Math.random() * 0.15,
-      drag:     0.997,
+      gravity:  0.28 + Math.random() * 0.14,
+      drag:     0.988,
       rotation: Math.random() * Math.PI * 2,
-      rotSpeed: (Math.random() - 0.5) * 0.25,
+      rotSpeed: (Math.random() - 0.5) * 0.22,
       color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
       shape: shapes[Math.floor(Math.random() * shapes.length)],
-      w: 9  + Math.random() * 10,
+      w: 8  + Math.random() * 10,
       h: 4  + Math.random() * 6,
       alpha: 1,
-      decay: 0.0018 + Math.random() * 0.0015,
+      decay: 0.0055 + Math.random() * 0.004,
       wobble: Math.random() * Math.PI * 2,
-      wobbleSpeed: 0.04 + Math.random() * 0.05,
+      wobbleSpeed: 0.05 + Math.random() * 0.06,
     };
   }
 
@@ -1187,13 +1189,13 @@ function dismissToast(el){
 
   function tick(){
     ctx.clearRect(0, 0, W, H);
-    particles = particles.filter(p => p.alpha > 0 && p.y < H + 80);
+    particles = particles.filter(p => p.alpha > 0 && p.y < H + 60);
     particles.forEach(p => {
       p.vy += p.gravity;
       p.vx *= p.drag;
       p.vy *= p.drag;
       p.wobble += p.wobbleSpeed;
-      p.x += p.vx + Math.sin(p.wobble) * 1.5;
+      p.x += p.vx + Math.sin(p.wobble) * 0.8;
       p.y += p.vy;
       p.rotation += p.rotSpeed;
       p.alpha -= p.decay;
@@ -1203,11 +1205,11 @@ function dismissToast(el){
     else { canvas.style.display = 'none'; animating = false; }
   }
 
-  const COUNTS = { follow: 150, sub: 220, raid: 300, cheer: 200 };
+  const COUNTS = { follow: 55, sub: 90, raid: 140, cheer: 100 };
 
   window.launchConfetti = function(type){
     canvas.style.display = 'block';
-    const count = COUNTS[type] || 80;
+    const count = COUNTS[type] || 55;
     for(let i = 0; i < count; i++){
       particles.push(makeCannonParticle('left'));
       particles.push(makeCannonParticle('right'));
